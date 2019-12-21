@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- 指定pom版本,所有模块的pom均需指定 -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 本模块的坐标 -->
+    <groupId>com.bai</groupId>
+    <artifactId>project_parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>project_parent</name>
+
+    <!-- 打包类型,默认为jar,含有子模块的模块自动被设置为pom -->
+    <packaging>pom</packaging>
+    <description>Demo project for Spring Boot</description>
+
+    <!-- 被聚合的子模块索引 -->
+    <modules>
+        <module>cloud_eureka</module>
+        <module>cloud_user</module>
+    </modules>
+
+    <!-- 引用maven仓库源 -->
+    <url>https://maven.apache.org</url>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.1.RELEASE</version>
+    </parent>
+
+    <!-- 这里集中定义整个项目里边所有第三方依赖的版本及其他可作用于所有pom的常量 -->
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
+    </properties>
+
+    <!--配置多环境-->
+    <profiles>
+        <profile>
+            <id>local</id>
+            <properties>
+                <env>local</env>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper</artifactId>
+            <version>3.3.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <version>2.2.1.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.18</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.1.20</version>
+        </dependency>
+    </dependencies>
+
+    <!--父模块：空的父模块，定义整个maven项目的依赖、版本等信息,继承： 子模块可以直接引用父模块依赖包的定义，避免重复定义dependencesManagement：管理子模块重复使用的依赖包定义，子类在引用父类的包时使用parent标签，引用父类的maven坐标，通过relativePath标签指明父类pom文件的位置，通过groupId和artifactId两个标签来引用父类中定义的重复依赖包注意：父类本身的groupId artifactId version都可以继承(但是不能全部继承，唯一性) -->
+    <!-- 这里集中陈列整个项目需要用到的第三方依赖及其版本 -->
+    <dependencyManagement>
+        <dependencies>
+            <!--父模块可以将子模块设定为依赖，例如提供整个maven项目最基础的功能-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

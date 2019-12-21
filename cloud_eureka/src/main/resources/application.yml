@@ -1,0 +1,10 @@
+server:
+  port: 8069
+spring:
+  application:
+    name: cloud_eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8069/eureka/
+    register-with-eureka: false
