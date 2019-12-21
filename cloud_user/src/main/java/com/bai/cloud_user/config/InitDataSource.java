@@ -37,17 +37,17 @@ public class InitDataSource {
         //jdbc连接配置  <jdbcConnection>
         JDBCConnectionConfiguration jdbcConnectionConfiguration = new JDBCConnectionConfiguration();
         jdbcConnectionConfiguration.setConnectionURL(url);
-        jdbcConnectionConfiguration.setDriverClass("");
+        jdbcConnectionConfiguration.setDriverClass("com.mysql.cj.jdbc.Driver");
         jdbcConnectionConfiguration.setUserId(username);
         jdbcConnectionConfiguration.setPassword(password);
         context.setJdbcConnectionConfiguration(jdbcConnectionConfiguration);
         //javaTypeResolver
 
         //引入其他插件配置
-        PluginConfiguration pluginConfiguration = new PluginConfiguration();
+        /*PluginConfiguration pluginConfiguration = new PluginConfiguration();
         pluginConfiguration.setConfigurationType("org.mybatis.generator.plugins.ToStringPlugin");
         pluginConfiguration.setConfigurationType("com.bai.cloud_user.config.DefaultPlugin");
-        context.addPluginConfiguration(pluginConfiguration);
+        context.addPluginConfiguration(pluginConfiguration);*/
 
         //javaModelGenerator
         JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
