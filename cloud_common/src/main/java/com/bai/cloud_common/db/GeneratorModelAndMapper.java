@@ -29,7 +29,6 @@ public class GeneratorModelAndMapper {
                               String env){
 
         List<String> warnings = new ArrayList<String>();
-        boolean overwrite = true;
         //generatorConfiguration
         Configuration config = new Configuration();
 
