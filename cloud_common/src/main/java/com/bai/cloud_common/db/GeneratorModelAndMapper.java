@@ -1,26 +1,32 @@
-package com.bai.cloud_user.config;
+package com.bai.cloud_common.db;
 
 
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.*;
 import org.mybatis.generator.exception.InvalidConfigurationException;
 import org.mybatis.generator.internal.DefaultShellCallback;
+import org.springframework.util.ObjectUtils;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Component
-//@Primary
-//@Slf4j
-public class InitDataSource {
 
-    //@Bean     //声明其为Bean实例
-    public static void createDataSource(String url,
-                                 String username,
-                                 String password,
-                                 String filePath,
-                                 String packName){
+/**
+ * @author bai
+ * @description 逆向生成model和mapper
+ */
+public class GeneratorModelAndMapper {
+
+    public static void create(String url,
+                              String username,
+                              String password,
+                              String filePath,
+                              String packName,
+                              String useActualName,
+                              String pluginPath,
+                              String env){
 
         List<String> warnings = new ArrayList<String>();
         boolean overwrite = true;
@@ -31,7 +37,7 @@ public class InitDataSource {
         //创建上下文
         Context context = new Context(ModelType.FLAT);
         //对应的xml文件配置<context id="DB2Tables" targetRuntime="MyBatis3">
-        context.setId("user");
+        context.setId("cloud");
         context.setTargetRuntime("MyBatis3");
 
         //jdbc连接配置  <jdbcConnection>
@@ -44,27 +50,27 @@ public class InitDataSource {
         //javaTypeResolver
 
         //引入其他插件配置
-        /*PluginConfiguration pluginConfiguration = new PluginConfiguration();
+        PluginConfiguration pluginConfiguration = new PluginConfiguration();
         pluginConfiguration.setConfigurationType("org.mybatis.generator.plugins.ToStringPlugin");
-        pluginConfiguration.setConfigurationType("com.bai.cloud_user.config.DefaultPlugin");
-        context.addPluginConfiguration(pluginConfiguration);*/
+
+        //自定义插件路径
+        if(!ObjectUtils.isEmpty(pluginPath)){
+            pluginConfiguration.setConfigurationType(pluginPath);
+        }
+        pluginConfiguration.addProperty("env", env);
+
+        context.addPluginConfiguration(pluginConfiguration);
 
         //javaModelGenerator
         JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
         //生成model的包路径
         javaModelGeneratorConfiguration.setTargetPackage(packName + ".dao.model");
         //生成model的项目路径
-        javaModelGeneratorConfiguration.setTargetPackage(filePath + "/src/main/java");
+        javaModelGeneratorConfiguration.setTargetProject(filePath + "/src/main/java");
         javaModelGeneratorConfiguration.addProperty("constructorBased", "true");
         javaModelGeneratorConfiguration.addProperty("trimStrings", "true");
         javaModelGeneratorConfiguration.addProperty("enableSubPackages", "true");
         context.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
-
-        //sqlMapGenerator
-        SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
-        sqlMapGeneratorConfiguration.setTargetPackage("mapper.generator");
-        sqlMapGeneratorConfiguration.setTargetProject(filePath + "/src/main/resources");
-        context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
         //javaClientGenerator
         JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();
@@ -73,13 +79,22 @@ public class InitDataSource {
         javaClientGeneratorConfiguration.setConfigurationType("XMLMAPPER");
         context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
 
+        //sqlMapGenerator
+        SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
+        sqlMapGeneratorConfiguration.setTargetPackage("mapper.generator");
+        sqlMapGeneratorConfiguration.setTargetProject(filePath + "/src/main/resources");
+        context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
+
+
         //table
         TableConfiguration tableConfiguration = new TableConfiguration(context);
         tableConfiguration.setTableName("%");
-        tableConfiguration.addProperty("useActualColumnNames", "false");
+        tableConfiguration.addProperty("useActualColumnNames", useActualName);
+        context.addTableConfiguration(tableConfiguration);
 
         config.addContext(context);
-        DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+
+        DefaultShellCallback callback = new DefaultShellCallback(true);
         MyBatisGenerator myBatisGenerator = null;
         try {
             myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
@@ -94,30 +109,5 @@ public class InitDataSource {
             e.printStackTrace();
         }
 
-
-        //直接创建数据库
-        /*DruidDataSource datasource = new DruidDataSource();
-        datasource.setUrl(url);
-        datasource.setUsername(username);
-        datasource.setPassword(password);
-        datasource.setDriverClassName(driverClassName);
-        try {
-            Class.forName(driverClassName);
-            String url01 = datasourceUrl.substring(0,datasourceUrl.indexOf("?"));
-            String url02 = url01.substring(0,url01.lastIndexOf("/"));
-            String datasourceName = url01.substring(url01.lastIndexOf("/")+1);
-            // 连接已经存在的数据库，如：mysql
-            Connection connection = DriverManager.getConnection(url02, username, password);
-            Statement statement = connection.createStatement();
-            // 创建数据库
-            statement.executeUpdate("create database if not exists `" + datasourceName + "` default character set utf8 COLLATE utf8_general_ci");
-            statement.close();
-            connection.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return datasource;*/
     }
-
-
 }

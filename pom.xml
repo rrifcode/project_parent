@@ -18,6 +18,7 @@
     <modules>
         <module>cloud_eureka</module>
         <module>cloud_user</module>
+        <module>cloud_common</module>
     </modules>
 
     <!-- 引用maven仓库源 -->
@@ -86,6 +87,12 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.1.20</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
         </dependency>
     </dependencies>
 
